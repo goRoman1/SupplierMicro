@@ -1,0 +1,66 @@
+syntax = "proto3";
+package problem;
+option go_package = "./;proto";
+
+service ProblemService{
+  rpc AddNewProblem(Problem) returns (Response) {}
+  rpc UpdateProblem(Problem) returns (Response) {}
+  rpc DeleteProblem(Problem) returns (Response) {}
+  rpc GetProblemByID(ProblemRequest) returns(Response) {}
+  rpc GetAllProblems(ProblemRequest) returns(Response) {}
+  rpc GetProblemsByTypeID(ProblemRequest) returns(Response) {}
+  rpc GetProblemsByUserID(ProblemRequest) returns(Response) {}
+  rpc GetProblemsBySolved(ProblemRequest) returns(Response) {}
+  rpc GetProblemsByTimePeriod(ProblemRequest) returns(Response) {}
+  rpc GetProblemTypeByID(ProblemRequest) returns(Response) {}
+  rpc GetAllProblemTypes(ProblemRequest) returns(Response) {}
+  rpc AddProblemSolution(ProblemSolution) returns(Response) {}
+  rpc GetSolutionByProblem(Problem) returns(Response) {}
+}
+
+message DateTime{
+  int64 seconds = 1;
+}
+
+message ProblemType {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Problem {
+  int64 id = 1;
+  int64 user_id = 2;
+  string description = 3;
+  ProblemType type = 4;
+  bool is_solved = 5;
+  DateTime reported_at = 6;
+}
+
+message Solution {
+  Problem problem = 1;
+  string description = 2;
+  DateTime solved_at = 3;
+}
+
+message ProblemSolution {
+  Problem problem = 1;
+  Solution solution = 2;
+}
+
+message ProblemRequest{
+  int64 id = 1;
+  int64 user_id = 2;
+  int32 type_id = 3;
+  bool is_solved = 4;
+  DateTime start_time = 5;
+  DateTime end_time = 6;
+}
+
+message Response {
+  bool success = 1;
+  Problem problem = 2;
+  repeated Problem problems = 3;
+  ProblemType problem_type = 4;
+  repeated ProblemType problem_types = 5;
+  Solution solution = 6;
+}
