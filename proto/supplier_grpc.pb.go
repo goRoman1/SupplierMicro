@@ -18,8 +18,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SupplierServiceClient interface {
-	CreateStation(ctx context.Context, in *ScooterStation, opts ...grpc.CallOption) (*Response, error)
-	GetLocations(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Location, error)
+	CreateStation(ctx context.Context, in *Station, opts ...grpc.CallOption) (*Response, error)
+	GetLocations(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 	CreateStationInLocation(ctx context.Context, in *StationLocation, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -31,7 +31,7 @@ func NewSupplierServiceClient(cc grpc.ClientConnInterface) SupplierServiceClient
 	return &supplierServiceClient{cc}
 }
 
-func (c *supplierServiceClient) CreateStation(ctx context.Context, in *ScooterStation, opts ...grpc.CallOption) (*Response, error) {
+func (c *supplierServiceClient) CreateStation(ctx context.Context, in *Station, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	err := c.cc.Invoke(ctx, "/supplier.SupplierService/CreateStation", in, out, opts...)
 	if err != nil {
@@ -40,8 +40,8 @@ func (c *supplierServiceClient) CreateStation(ctx context.Context, in *ScooterSt
 	return out, nil
 }
 
-func (c *supplierServiceClient) GetLocations(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Location, error) {
-	out := new(Location)
+func (c *supplierServiceClient) GetLocations(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
 	err := c.cc.Invoke(ctx, "/supplier.SupplierService/GetLocations", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -62,8 +62,8 @@ func (c *supplierServiceClient) CreateStationInLocation(ctx context.Context, in 
 // All implementations must embed UnimplementedSupplierServiceServer
 // for forward compatibility
 type SupplierServiceServer interface {
-	CreateStation(context.Context, *ScooterStation) (*Response, error)
-	GetLocations(context.Context, *Request) (*Location, error)
+	CreateStation(context.Context, *Station) (*Response, error)
+	GetLocations(context.Context, *Request) (*Response, error)
 	CreateStationInLocation(context.Context, *StationLocation) (*Response, error)
 	mustEmbedUnimplementedSupplierServiceServer()
 }
@@ -72,10 +72,10 @@ type SupplierServiceServer interface {
 type UnimplementedSupplierServiceServer struct {
 }
 
-func (UnimplementedSupplierServiceServer) CreateStation(context.Context, *ScooterStation) (*Response, error) {
+func (UnimplementedSupplierServiceServer) CreateStation(context.Context, *Station) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateStation not implemented")
 }
-func (UnimplementedSupplierServiceServer) GetLocations(context.Context, *Request) (*Location, error) {
+func (UnimplementedSupplierServiceServer) GetLocations(context.Context, *Request) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLocations not implemented")
 }
 func (UnimplementedSupplierServiceServer) CreateStationInLocation(context.Context, *StationLocation) (*Response, error) {
@@ -95,7 +95,7 @@ func RegisterSupplierServiceServer(s grpc.ServiceRegistrar, srv SupplierServiceS
 }
 
 func _SupplierService_CreateStation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ScooterStation)
+	in := new(Station)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func _SupplierService_CreateStation_Handler(srv interface{}, ctx context.Context
 		FullMethod: "/supplier.SupplierService/CreateStation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SupplierServiceServer).CreateStation(ctx, req.(*ScooterStation))
+		return srv.(SupplierServiceServer).CreateStation(ctx, req.(*Station))
 	}
 	return interceptor(ctx, in, info, handler)
 }

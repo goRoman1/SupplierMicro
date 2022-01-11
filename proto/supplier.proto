@@ -3,16 +3,14 @@ package supplier;
 option go_package = "./;proto";
 
 service SupplierService{
-  rpc CreateStation (ScooterStation) returns (Response) {}
-  rpc GetLocations (Request) returns(Location) {}
+  rpc CreateStation (Station) returns (Response) {}
+  rpc GetLocations (Request) returns(Response) {}
   rpc CreateStationInLocation (StationLocation) returns(Response) {}
 }
 
 message Request {}
 
-message Response {}
-
-message ScooterStation {
+message Station {
   int32 id = 1;
   string name = 2;
   bool is_active = 3;
@@ -28,6 +26,14 @@ message Location {
 }
 
 message StationLocation {
-  ScooterStation scooter_station = 1;
+  Station scooter_station = 1;
   Location location = 2;
+}
+
+message Response {
+  bool success = 1;
+  Location location = 2;
+  repeated Location locations = 3;
+  Station scooter_station = 4;
+  repeated Station scooter_stations = 5;
 }
