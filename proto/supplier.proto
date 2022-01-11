@@ -1,0 +1,33 @@
+syntax = "proto3";
+package supplier;
+option go_package = "./;proto";
+
+service SupplierService{
+  rpc CreateStation (ScooterStation) returns (Response) {}
+  rpc GetLocations (Request) returns(Location) {}
+  rpc CreateStationInLocation (StationLocation) returns(Response) {}
+}
+
+message Request {}
+
+message Response {}
+
+message ScooterStation {
+  int32 id = 1;
+  string name = 2;
+  bool is_active = 3;
+  float latitude = 4;
+  float longitude = 5;
+}
+
+message Location {
+  int32 id = 1;
+  float latitude = 2;
+  float longitude = 3;
+  string label = 4;
+}
+
+message StationLocation {
+  ScooterStation scooter_station = 1;
+  Location location = 2;
+}

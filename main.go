@@ -1,10 +1,10 @@
-//go:generate protoc -I=./proto --go_out=./proto ./proto/problem.proto --go-grpc_out=./proto ./proto/problem.proto
+//go:generate protoc -I=./proto --go_out=./proto ./proto/supplier.proto --go-grpc_out=./proto ./proto/supplier.proto
 package main
 
 import (
-	"ProblemMicro/configs"
-	"ProblemMicro/proto"
-	"ProblemMicro/service"
+	"SupplierMicro/configs"
+	"SupplierMicro/proto"
+	"SupplierMicro/service"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
@@ -14,7 +14,7 @@ import (
 	"net"
 )
 
-const MicroName = "problem_service"
+const MicroName = "supplier_service"
 
 func main() {
 	connectionDB := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -30,7 +30,7 @@ func main() {
 	}
 	defer db.Close()
 
-	service := service.NewProblemService(db)
+	service := service.NewSupplierService(db)
 
 	listener, err := net.Listen("tcp", net.JoinHostPort("", configs.GRPC_PORT))
 	if err != nil {
@@ -39,7 +39,7 @@ func main() {
 
 	server := grpc.NewServer()
 	defer server.GracefulStop()
-	proto.RegisterProblemServiceServer(server, service)
+	proto.RegisterSupplierServiceServer(server, service)
 	reflection.Register(server)
 
 	if err := server.Serve(listener); err != nil {
