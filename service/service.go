@@ -7,27 +7,26 @@ import (
 	"database/sql"
 )
 
-type SupplierService struct {
-	Repo *repository.SupplierRepo
-	*proto.UnimplementedSupplierServiceServer
+type SupplierMicroService struct {
+	Repo *repository.SupplierMicroRepo
+	*proto.UnimplementedSupplierMicroServiceServer
 }
 
-func NewSupplierService(repo *sql.DB) *SupplierService {
-	return &SupplierService{
-		Repo: repository.NewSupplierRepo(repo),
+func NewSupplierMicroService(repo *sql.DB) *SupplierMicroService {
+	return &SupplierMicroService{
+		Repo: repository.NewSupplierMicroRepo(repo),
 	}
 }
 
-func (ss *SupplierService) CreateStation(ctx context.Context, station *proto.Station) (*proto.Response, error) {
+func (ss *SupplierMicroService) CreateStation(ctx context.Context, station *proto.Station) (*proto.Response, error) {
 	stationCreated, err := ss.Repo.CreateStation(ctx, station)
-	//goland:noinspection ALL
 	return &proto.Response{
 		Success:        err == nil,
 		ScooterStation: stationCreated,
 	}, err
 }
 
-func (ss *SupplierService) GetLocations(ctx context.Context, req *proto.Request) (*proto.Response, error) {
+func (ss *SupplierMicroService) GetLocations(ctx context.Context, req *proto.Request) (*proto.Response, error) {
 	_ = req
 	locations, err := ss.Repo.GetLocations(ctx)
 	return &proto.Response{
@@ -36,7 +35,7 @@ func (ss *SupplierService) GetLocations(ctx context.Context, req *proto.Request)
 	}, err
 }
 
-func (ss *SupplierService) CreateStationInLocation(ctx context.Context, st *proto.StationLocation) (*proto.Response, error) {
+func (ss *SupplierMicroService) CreateStationInLocation(ctx context.Context, st *proto.StationLocation) (*proto.Response, error) {
 	stationCreated, err := ss.Repo.CreateStationInLocation(ctx, st.ScooterStation, st.Location)
 	return &proto.Response{
 		Success:        err == nil,

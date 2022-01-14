@@ -1,8 +1,8 @@
 syntax = "proto3";
-package supplier;
+package supplierMicro;
 option go_package = "./;proto";
 
-service SupplierService{
+service SupplierMicroService{
   rpc CreateStation (Station) returns (Response) {}
   rpc GetLocations (Request) returns(Response) {}
   rpc CreateStationInLocation (StationLocation) returns(Response) {}
