@@ -5,6 +5,7 @@ option go_package = "./;proto";
 service SupplierMicroService{
   rpc CreateStation (Station) returns (Response) {}
   rpc GetLocations (Request) returns(Response) {}
+  rpc GetStations (Request) returns(Response) {}
   rpc CreateStationInLocation (StationLocation) returns(Response) {}
 }
 

@@ -35,6 +35,15 @@ func (ss *SupplierMicroService) GetLocations(ctx context.Context, req *proto.Req
 	}, err
 }
 
+func (ss *SupplierMicroService) GetStations(ctx context.Context, req *proto.Request) (*proto.Response, error) {
+	_ = req
+	stations, err := ss.Repo.GetStations(ctx)
+	return &proto.Response{
+		Success:         err == nil,
+		ScooterStations: stations,
+	}, err
+}
+
 func (ss *SupplierMicroService) CreateStationInLocation(ctx context.Context, st *proto.StationLocation) (*proto.Response, error) {
 	stationCreated, err := ss.Repo.CreateStationInLocation(ctx, st.ScooterStation, st.Location)
 	return &proto.Response{

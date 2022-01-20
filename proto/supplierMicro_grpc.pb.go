@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type SupplierMicroServiceClient interface {
 	CreateStation(ctx context.Context, in *Station, opts ...grpc.CallOption) (*Response, error)
 	GetLocations(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	GetStations(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 	CreateStationInLocation(ctx context.Context, in *StationLocation, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -49,6 +50,15 @@ func (c *supplierMicroServiceClient) GetLocations(ctx context.Context, in *Reque
 	return out, nil
 }
 
+func (c *supplierMicroServiceClient) GetStations(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/supplierMicro.SupplierMicroService/GetStations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *supplierMicroServiceClient) CreateStationInLocation(ctx context.Context, in *StationLocation, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	err := c.cc.Invoke(ctx, "/supplierMicro.SupplierMicroService/CreateStationInLocation", in, out, opts...)
@@ -64,6 +74,7 @@ func (c *supplierMicroServiceClient) CreateStationInLocation(ctx context.Context
 type SupplierMicroServiceServer interface {
 	CreateStation(context.Context, *Station) (*Response, error)
 	GetLocations(context.Context, *Request) (*Response, error)
+	GetStations(context.Context, *Request) (*Response, error)
 	CreateStationInLocation(context.Context, *StationLocation) (*Response, error)
 	mustEmbedUnimplementedSupplierMicroServiceServer()
 }
@@ -77,6 +88,9 @@ func (UnimplementedSupplierMicroServiceServer) CreateStation(context.Context, *S
 }
 func (UnimplementedSupplierMicroServiceServer) GetLocations(context.Context, *Request) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLocations not implemented")
+}
+func (UnimplementedSupplierMicroServiceServer) GetStations(context.Context, *Request) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStations not implemented")
 }
 func (UnimplementedSupplierMicroServiceServer) CreateStationInLocation(context.Context, *StationLocation) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateStationInLocation not implemented")
@@ -130,6 +144,24 @@ func _SupplierMicroService_GetLocations_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SupplierMicroService_GetStations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SupplierMicroServiceServer).GetStations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/supplierMicro.SupplierMicroService/GetStations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SupplierMicroServiceServer).GetStations(ctx, req.(*Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SupplierMicroService_CreateStationInLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(StationLocation)
 	if err := dec(in); err != nil {
@@ -162,6 +194,10 @@ var SupplierMicroService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLocations",
 			Handler:    _SupplierMicroService_GetLocations_Handler,
+		},
+		{
+			MethodName: "GetStations",
+			Handler:    _SupplierMicroService_GetStations_Handler,
 		},
 		{
 			MethodName: "CreateStationInLocation",

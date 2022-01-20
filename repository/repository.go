@@ -53,6 +53,26 @@ func (repo *SupplierMicroRepo) GetLocations(ctx context.Context) ([]*proto.Locat
 	return result, nil
 }
 
+func (repo *SupplierMicroRepo) GetStations(ctx context.Context) ([]*proto.Station, error) {
+	query := `SELECT * FROM locations ORDER BY id;`
+	row, err := repo.db.QueryContext(ctx, query)
+
+	var result []*proto.Station
+	if err != nil {
+		return result, err
+	}
+	defer row.Close()
+	for row.Next() {
+		var station proto.Station
+		err := row.Scan(&station.Id, &station.IsActive, &station.Latitude, &station.Longitude)
+		if err != nil {
+			return result, err
+		}
+		result = append(result, &station)
+	}
+	return result, nil
+}
+
 func (repo *SupplierMicroRepo) CreateStationInLocation(ctx context.Context, station *proto.Station, location *proto.Location) (*proto.Station, error) {
 	query := `INSERT INTO scooter_stations (name, is_active, latitude, longitude)
 	VALUES($1, $2, $3, $4)
